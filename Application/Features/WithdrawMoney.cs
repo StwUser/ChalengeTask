@@ -8,43 +8,22 @@ namespace Application.Features
     public class WithdrawMoney
     {
         private readonly IAccountRepository accountRepository;
-        private readonly INotificationService notificationService;
+        private readonly ITransferMoneyValidator validator;
 
-        public WithdrawMoney(IAccountRepository accountRepository, INotificationService notificationService)
+        public WithdrawMoney(IAccountRepository accountRepository, ITransferMoneyValidator validator)
         {
             this.accountRepository = accountRepository;
-            this.notificationService = notificationService;
+            this.validator = validator;
         }
 
         public void Execute(Guid fromAccountId, decimal amount)
         {
             var from = this.accountRepository.GetAccountById(fromAccountId) ?? throw new ArgumentException("Account not found.");
-            
-            if (ValidateAccount(from, amount))
-            {
-                from.Balance -= amount;
-                this.accountRepository.Update(from);
-            }
-        }
+            validator.ValidateAccountFrom(from, amount);
 
-        private bool ValidateAccount(Account from, decimal amount) 
-        {
-            if (amount < 0)
-            {
-                throw new ArgumentException("Amount can't be less than 0.");
-            }
-
-            if (from.Balance < amount)
-            {
-                throw new InvalidOperationException("Insufficient funds to make transfer");
-            }
-
-            if (from.Balance - amount < Account.LowerBalanceLimit)
-            {
-                this.notificationService.NotifyFundsLow(from.User.Email);
-            }
-
-            return true;
+            from.Balance -= amount;
+            from.Withdrawn -= amount;
+            this.accountRepository.Update(from);
         }
     }
 }

@@ -18,15 +18,15 @@ namespace ApplicationTest.TestData
             }
             if (accountId == Constants.AccountWithoutBalanceMoney)
             {
-                return new Account { Id = accountId, Balance = 100, User = new User { Email = "Test@gmail.com", Name = "User1" } };
+                return new Account { Id = accountId, Balance = 100, PaidIn = 100, User = new User { Email = "Test@gmail.com", Name = "User1" } };
             }
             else if (accountId == Constants.AccountWithLowBalanceMoney)
             {
-                return new Account { Id = accountId, Balance = 500, User = new User { Email = "Test2@gmail.com", Name = "User2" } };
+                return new Account { Id = accountId, Balance = 500, PaidIn = 500, User = new User { Email = "Test2@gmail.com", Name = "User2" } };
             }
             else if (accountId == Constants.AccountWithHugeBalanceMoney)
             {
-                return new Account { Id = accountId, Balance = 50000, User = new User { Email = "Test2@gmail.com", Name = "User2" } };
+                return new Account { Id = accountId, Balance = 3000, PaidIn = 3000, User = new User { Email = "Test2@gmail.com", Name = "User2" } };
             }
 
             return null;

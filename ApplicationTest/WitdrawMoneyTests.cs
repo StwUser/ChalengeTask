@@ -1,12 +1,14 @@
+using Application.Domain.Services;
 using Application.Features;
 using ApplicationTest.TestData;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ApplicationTest
 {
     public class WitdrawMoneyTests
     {
-        private readonly WithdrawMoney witdrawMoney = new WithdrawMoney(new TestAccountRepository(), new TestNotificationService());
+        private readonly WithdrawMoney witdrawMoney = new WithdrawMoney(new TestAccountRepository(), new TransferMoneyValidator(new TestNotificationService()));
 
         [Test]
         public void IfAccounWasNotFoundTest()
